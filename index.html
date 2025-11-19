@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Теремок — визуальная модель команды</title>
+    <title>Теремок — сценарная игра для руководителя</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         :root {
@@ -90,28 +90,28 @@
         }
 
         .subtitle {
-            max-width: 640px;
+            max-width: 680px;
             color: var(--muted);
             font-size: 14px;
-            margin-bottom: 22px;
+            margin-bottom: 18px;
         }
 
         /* LAYOUT */
 
-        .teremok-layout {
+        .game-layout {
             display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.25fr);
             gap: 20px;
             align-items: stretch;
         }
 
         @media (max-width: 880px) {
-            .teremok-layout {
+            .game-layout {
                 grid-template-columns: minmax(0, 1fr);
             }
         }
 
-        /* BUILDING */
+        /* BUILDING / TEREMOK */
 
         .teremok-building-wrapper {
             background:
@@ -203,6 +203,13 @@
             border-radius: 12px;
             border: 1px solid rgba(31,41,55,0.9);
             background: rgba(2,6,23,0.96);
+            transition: border-color 0.12s ease, background-color 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        .teremok-floor-active {
+            border-color: rgba(249,115,22,0.8);
+            background: rgba(15,23,42,0.98);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.7);
         }
 
         .floor-label {
@@ -256,6 +263,27 @@
             box-shadow: 0 10px 24px rgba(0,0,0,0.8);
         }
 
+        .hero-chip.completed {
+            position: relative;
+        }
+
+        .hero-chip.completed::after {
+            content: "✓";
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 14px;
+            height: 14px;
+            border-radius: 999px;
+            background: #22c55e;
+            color: #020617;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 1px rgba(15,23,42,0.9);
+        }
+
         .hero-avatar {
             width: 20px;
             height: 20px;
@@ -302,7 +330,7 @@
             color: var(--muted);
         }
 
-        /* PANEL */
+        /* PANEL / SCENARIO */
 
         .panel {
             background: rgba(15,23,42,0.96);
@@ -331,7 +359,13 @@
             margin-bottom: 10px;
         }
 
-        .panel-type-tag {
+        .panel-progress {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .panel-hero-tag {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -343,49 +377,11 @@
             margin-bottom: 8px;
         }
 
-        .panel-type-pill {
+        .panel-hero-pill {
             font-size: 11px;
             padding: 2px 7px;
             border-radius: 999px;
             border: 1px solid rgba(75,85,99,0.9);
-        }
-
-        .panel-section-title {
-            font-size: 13px;
-            font-weight: 600;
-            margin-top: 8px;
-            margin-bottom: 2px;
-        }
-
-        .panel-text {
-            font-size: 13px;
-            color: var(--muted);
-        }
-
-        .panel-list {
-            margin: 0;
-            padding-left: 16px;
-            font-size: 13px;
-            color: var(--muted);
-        }
-
-        .panel-list li {
-            margin-bottom: 2px;
-        }
-
-        .panel-hint {
-            margin-top: 8px;
-            font-size: 11px;
-            color: var(--muted);
-        }
-
-        .panel-highlight {
-            margin-top: 8px;
-            font-size: 12px;
-            padding: 6px 8px;
-            border-radius: 12px;
-            border: 1px dashed rgba(75,85,99,0.9);
-            color: var(--muted);
         }
 
         .hero-type-label-result {
@@ -403,6 +399,194 @@
         .hero-type-label-byt {
             color: #9ca3af;
         }
+
+        .scene-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 4px 0 4px;
+        }
+
+        .scene-text {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .scene-question-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .scene-options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .scene-option-btn {
+            width: 100%;
+            text-align: left;
+            border-radius: 12px;
+            border: 1px solid rgba(31,41,55,0.9);
+            background: #020617;
+            color: var(--muted);
+            padding: 7px 9px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: border-color 0.1s ease, background-color 0.1s ease, transform 0.06s ease;
+        }
+
+        .scene-option-btn:hover {
+            border-color: rgba(148,163,184,0.9);
+            background: rgba(15,23,42,0.98);
+            transform: translateY(-0.5px);
+        }
+
+        .scene-option-btn.selected {
+            border-color: var(--accent-soft);
+            background: rgba(249,115,22,0.08);
+            color: var(--text);
+        }
+
+        .scene-comment {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+            min-height: 32px;
+        }
+
+        .scene-actions-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .btn-primary {
+            border: none;
+            border-radius: 999px;
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            background: radial-gradient(circle at top left, #fb923c, #f97316);
+            color: #020617;
+            box-shadow: 0 12px 28px rgba(248,113,22,0.6);
+            transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.08s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 32px rgba(248,113,22,0.65);
+            filter: brightness(1.02);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 10px 22px rgba(248,113,22,0.5);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: default;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .panel-hint {
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* SUMMARY */
+
+        .game-summary {
+            margin-top: 12px;
+            padding: 10px 10px;
+            border-radius: 14px;
+            border: 1px dashed rgba(75,85,99,0.9);
+            background: rgba(2,6,23,0.96);
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .game-summary-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+
+        .summary-rows {
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .summary-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(0, 2.2fr) auto;
+            gap: 8px;
+            align-items: center;
+        }
+
+        @media (max-width: 720px) {
+            .summary-row {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 4px;
+            }
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .summary-bar {
+            position: relative;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(30,64,175,0.35);
+            overflow: hidden;
+        }
+
+        .summary-bar-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            border-radius: 999px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+            width: 0;
+            transition: width 0.4s ease;
+        }
+
+        .summary-value {
+            font-size: 11px;
+            color: var(--muted);
+            justify-self: flex-end;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            margin-top: 28px;
+            font-size: 11px;
+            color: var(--muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+        }
     </style>
 </head>
 <body>
@@ -412,20 +596,20 @@
             <div class="logo-mark">Т</div>
             <span>Теремок команды</span>
         </div>
-        <div class="top-tag">Визуальная модель мотивации и поведения сотрудников</div>
+        <div class="top-tag">Сценарная игра по мотивационной модели</div>
     </div>
 
-    <h1>Живой «Теремок» команды: <span>нажми на героя</span> и посмотри, чем он живёт</h1>
+    <h1>Один день в «Теремке»: <span>управленческая игра для руководителя</span></h1>
     <p class="subtitle">
-        Это прототип визуальной модели. Каждый герой — типаж сотрудника, которого руководитель «узнаёт».
-        Нажмите на героя в Теремке, чтобы увидеть его вклад, мотивацию, риски и рекомендации по управлению.
+        Перед вами прототип игры по модели «Теремок». Кликайте на героев, разбирайте ситуации и смотрите,
+        кого вы усиливаете своими решениями: результатников, процессников, статусников или избегание жёстких шагов.
     </p>
 
-    <div class="teremok-layout">
-        <!-- BUILDING -->
+    <div class="game-layout">
+        <!-- TEREMOK BUILDING -->
         <div class="teremok-building-wrapper">
             <div class="teremok-title-row">
-                <div class="teremok-title">Теремок команды</div>
+                <div class="teremok-title">Теремок вашей команды</div>
                 <div class="teremok-legend">
                     Условные цвета вовлечённости
                     <div class="legend-dots">
@@ -437,7 +621,7 @@
                 </div>
             </div>
 
-            <div class="teremok-building">
+            <div class="teremok-building" id="teremok-building">
                 <div class="teremok-roof"></div>
                 <div class="teremok-floors">
                     <!-- Этаж 4 -->
@@ -502,235 +686,449 @@
             </div>
         </div>
 
-        <!-- PANEL -->
-        <aside class="panel" id="hero-panel">
-            <div class="panel-kicker">Выберите героя в Теремке</div>
-            <h2 class="panel-title">Кто он и чем живёт</h2>
-            <p class="panel-subtitle">
-                Нажмите на любого героя в доме слева. Здесь появится описание: вклад в бизнес, мотивация,
-                риски и как с ним лучше выстраивать работу.
+        <!-- SCENARIO PANEL -->
+        <aside class="panel">
+            <div class="panel-kicker">Сценарная игра</div>
+            <h2 class="panel-title" id="panel-title">Выберите героя, с которого начнём</h2>
+            <p class="panel-subtitle" id="panel-subtitle">
+                Кликните по Птице, Хомяку, Лисе или Крысе в Теремке слева. Для каждого героя — свой короткий сценарий из реальной жизни руководителя.
             </p>
 
-            <div id="panel-dynamic">
-                <!-- Сюда подставляется содержимое по клику -->
+            <div class="panel-progress" id="panel-progress">
+                Пройдено сценариев: 0 из 4
+            </div>
+
+            <div id="panel-hero-tag" class="panel-hero-tag hidden">
+                <span>В кадре:</span>
+                <span id="panel-hero-name" class="panel-hero-pill"></span>
+                <span id="panel-hero-type" class="panel-hero-pill"></span>
+            </div>
+
+            <div id="scene-container" class="scene-container hidden">
+                <div class="scene-title" id="scene-title"></div>
+                <div class="scene-text" id="scene-text"></div>
+
+                <div class="scene-question-label">Как вы поступите как руководитель?</div>
+                <div class="scene-options" id="scene-options"></div>
+
+                <div class="scene-comment" id="scene-comment"></div>
+
+                <div class="scene-actions-row">
+                    <div class="panel-hint" id="scene-hint">
+                        Выберите вариант выше, затем нажмите «Завершить сценарий».
+                    </div>
+                    <button class="btn-primary" id="scene-finish" disabled>Завершить сценарий</button>
+                </div>
+            </div>
+
+            <div id="game-summary" class="game-summary hidden">
+                <div class="game-summary-title">Ваш стиль управленческих решений в этой игре</div>
+                <div id="game-summary-text"></div>
+                <div class="summary-rows">
+                    <div class="summary-row">
+                        <div class="summary-label">Поддержка результатников и прямых решений</div>
+                        <div class="summary-bar"><div class="summary-bar-inner" id="bar-result"></div></div>
+                        <div class="summary-value" id="value-result">0</div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-label">Опора на процессников и стабильность</div>
+                        <div class="summary-bar"><div class="summary-bar-inner" id="bar-process"></div></div>
+                        <div class="summary-value" id="value-process">0</div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-label">Укрепление статусных игр и «мягких» решений</div>
+                        <div class="summary-bar"><div class="summary-bar-inner" id="bar-status"></div></div>
+                        <div class="summary-value" id="value-status">0</div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-label">Избегание жёстких разворотов проблем</div>
+                        <div class="summary-bar"><div class="summary-bar-inner" id="bar-avoid"></div></div>
+                        <div class="summary-value" id="value-avoid">0</div>
+                    </div>
+                </div>
+                <div class="panel-hint" style="margin-top:8px;">
+                    Это игровая модель. В программе «Формула Успешной Команды» дополнительно разбираются
+                    уровни вовлечённости (зелёные/жёлтые/оранжевые/красные) и матрица системности.
+                </div>
             </div>
 
             <div class="panel-hint">
-                Эта версия — прототип. Дальше можно:
-                добавить реальные истории, видео, ссылки на упражнения, привязку к тестам и Матрице системности.
+                Для прототипа достаточно пройти 4 сценария (Птица, Хомяк, Лиса, Крыса). Лидер и Профи здесь как фон —
+                для будущих сценариев и описаний.
             </div>
         </aside>
     </div>
+
+    <footer>
+        <div>© Теремок команды. Прототип игры по авторской модели мотивации.</div>
+        <div>Можно встроить в лендинг программы «Формула Успешной Команды» как интерактивный блок.</div>
+    </footer>
 </div>
 
 <script>
 (function () {
     const heroes = {
-        leader: {
-            id: 'leader',
-            name: 'Лидер',
-            floor: 4,
-            typeLabel: 'Надсистемный результатник',
-            typeClass: 'hero-type-label-result',
-            short: 'Тянет изменения, собирает вокруг себя людей. Часто формальный или неформальный руководитель.',
-            kind: 'R',
-            involvement: 'условно зелёный',
-            does: [
-                'видит картину шире своего участка и связывает людей между собой;',
-                'берёт на себя ответственность за сложные решения и «неудобные» разговоры;',
-                'поддерживает результатников и профи, защищает их от лишнего хаоса.'
-            ],
-            risks: [
-                'если не дать рамки — может «тащить всё на себе» и выгорать;',
-                'при конфликте с собственником уводит за собой людей;',
-                'в токсичной среде либо уходит, либо становится циничным.'
-            ],
-            management: [
-                'обсуждайте с ним стратегию и давайте реальные полномочия, а не только задачи;',
-                'фиксируйте договорённости по зоне ответственности и результатам;',
-                'используйте как союзника в изменениях, а не как «старшего исполнителя».'
-            ]
-        },
-        pro: {
-            id: 'pro',
-            name: 'Профи',
-            floor: 4,
-            typeLabel: 'Системный профессионал',
-            typeClass: 'hero-type-label-result',
-            short: 'Сильный эксперт, который держит качество и сложные задачи в своей зоне.',
-            kind: 'R/P',
-            involvement: 'условно зелёный/жёлтый',
-            does: [
-                'решает нетривиальные задачи, к нему бегут за советом;',
-                'держит стандарт качества и «чувствует» свой продукт или услугу;',
-                'часто тихий лидер внутри команды — на него ориентируются.'
-            ],
-            risks: [
-                'может замыкать знания на себе и не делиться опытом;',
-                'не любит хаос и частую смену правил — может «внутренне уйти»;',
-                'если его не слышат — делает свою работу, но перестаёт быть инициативным.'
-            ],
-            management: [
-                'подключайте к разработке стандартов и обучению других;',
-                'давайте время на глубокую работу, не дробите день на десятки мелких задач;',
-                'регулярно спрашивайте мнение по изменениям — он видит риски раньше других.'
-            ]
-        },
         bird: {
             id: 'bird',
             name: 'Птица',
-            floor: 3,
             typeLabel: 'Результатник',
-            typeClass: 'hero-type-label-result',
-            short: 'Летит туда, где есть цель, драйв и понятная отдача. Часто — сильный продавец или проектный.',
-            kind: 'R',
-            involvement: 'чаще зелёный/жёлтый',
-            does: [
-                'любует чёткую цель и свободу действий в рамках договорённостей;',
-                'ищет возможности, а не поводы не делать;',
-                'тащит выручку или ключевые показатели, если видит смысл и поддержку.'
-            ],
-            risks: [
-                'не переносит избыточный контроль и бессмысленные отчёты;',
-                'если «срезать крылья», превращается в циничного исполнителя;',
-                'может забрать на себя слишком много, если вокруг много слабых людей.'
-            ],
-            management: [
-                'договаривайтесь на языке целей, ресурсов и зон ответственности;',
-                'давайте пространство для манёвра, но чётко фиксируйте результат;',
-                'разбирайте с ним не только ошибки, но и удачные кейсы — это усиливает мотивацию.'
-            ]
+            typeClass: 'hero-type-label-result'
         },
         hamster: {
             id: 'hamster',
             name: 'Хомяк',
-            floor: 2,
             typeLabel: 'Процессник',
-            typeClass: 'hero-type-label-process',
-            short: 'Стабильный исполнитель, который любит порядок и предсказуемость.',
-            kind: 'P',
-            involvement: 'чаще жёлтый',
-            does: [
-                'аккуратно выполняет задачи по понятным инструкциям;',
-                'держит рутину, отчётность, документооборот и прочую «незаметную» работу;',
-                'чувствует себя уверенно, когда есть ясные правила и понятный руководитель.'
-            ],
-            risks: [
-                'плохо переносит резкие изменения и хаос;',
-                'сам редко предлагает улучшения — «делает как принято»;',
-                'может перегореть, если на него бездумно наваливают всё подряд.'
-            ],
-            management: [
-                'давайте чёткие инструкции и сроки, избегайте постоянной смены правил;',
-                'разделяйте крупные задачи на понятные шаги;',
-                'замечайте стабильность, а не только героические подвиги других.'
-            ]
+            typeClass: 'hero-type-label-process'
         },
         fox: {
             id: 'fox',
             name: 'Лиса',
-            floor: 1,
             typeLabel: 'Статусник',
-            typeClass: 'hero-type-label-status',
-            short: 'Ориентирована на карьеру, влияние и признание. Может быть сильным игроком, если статус привязан к результату.',
-            kind: 'S',
-            involvement: 'от жёлтого до оранжевого',
-            does: [
-                'активно коммуницирует, много в связях и договорённостях;',
-                'умеет производить впечатление и управлять восприятием себя;',
-                'часто тянется к позициям, где можно влиять и быть заметной.'
-            ],
-            risks: [
-                'при слабой системе может уходить в игры и интриги;',
-                'может защищать свой статус любой ценой, включая снижение чужой значимости;',
-                'при отсутствии ясных критериев успеха работает «на картинку».'
-            ],
-            management: [
-                'привяжите статус к понятным результатам и вкладу в команду;',
-                'проясните рамки влияния и ответственность за решения;',
-                'давайте ей публичные задачи, где результат действительно важен бизнесу.'
-            ]
+            typeClass: 'hero-type-label-status'
         },
         rat: {
             id: 'rat',
             name: 'Крыса',
-            floor: 1,
-            typeLabel: 'Подсистемный токсичный сотрудник',
-            typeClass: 'hero-type-label-byt',
-            short: 'Формально может быть полезен, но создаёт скрытые риски, конфликты и недоверие.',
-            kind: 'B/S',
-            involvement: 'часто оранжевый/красный',
-            does: [
-                'копит недовольство и распространяет его в «узком кругу»;',
-                'играет на противоречиях между людьми и отделами;',
-                'держится за место за счёт нужной информации или навыков.'
-            ],
-            risks: [
-                'подрывает доверие к руководителю и компании;',
-                'тормозит изменения, саботирует решения «мягко, но регулярно»;',
-                'забирает энергию у сильных людей, втягивая их в разборки.'
-            ],
-            management: [
-                'чётко фиксируйте договорённости и ответственность, убирайте серые зоны;',
-                'проверяйте, на чём держится его ценность для компании, и снижайте зависимость;',
-                'будьте готовы к взрослому решению: либо меняется поведение, либо расставание.'
+            typeLabel: 'Подсистемный токсичный',
+            typeClass: 'hero-type-label-byt'
+        },
+        leader: {
+            id: 'leader',
+            name: 'Лидер',
+            typeLabel: 'Надсистемный результатник',
+            typeClass: 'hero-type-label-result'
+        },
+        pro: {
+            id: 'pro',
+            name: 'Профи',
+            typeLabel: 'Системный профессионал',
+            typeClass: 'hero-type-label-result'
+        }
+    };
+
+    // Сюжетные сценарии по героям
+    const scenarios = {
+        hamster: {
+            heroId: 'hamster',
+            title: 'Хомяк и перегрузка «тихих» исполнителей',
+            text: 'Хомяк — ваш стабильный исполнитель. В последние недели на него легло больше задач: коллеги уходили в отпуск, часть людей болела. Он не жалуется, но стал чаще задерживаться и реже приносить предложения по улучшению процессов.',
+            options: [
+                {
+                    id: 'hamster-1',
+                    text: 'Вы садитесь с ним на быстрый разбор: какие задачи правда критичны, какие можно снять или передать. Чётко перераспределяете нагрузку и договариваетесь о понятных приоритетах.',
+                    comment: 'Вы поддерживаете процессника, но и защищаете его от выгорания. Сигнал команде: стабильность важна, людей нельзя «просто грузить».',
+                    effects: { process: 2, result: 1 }
+                },
+                {
+                    id: 'hamster-2',
+                    text: 'Отмечаете, что он «молодец, держит фронт», добавляете ещё одну задачу «на всякий случай» и просите просто немного потерпеть — «скоро станет легче».',
+                    comment: 'Формально вы его хвалите, но по факту усиливаете схему, в которой тихие тянут, а остальные живут комфортно.',
+                    effects: { status: 1, avoid: 2 }
+                },
+                {
+                    id: 'hamster-3',
+                    text: 'Часть его задач отдаёте Птице: она быстрее справится, зато удержит результат. При этом почти не обсуждаете, как сам Хомяк относится к перераспределению.',
+                    comment: 'Вы усиливаете результатников, но рискуете потерять лояльность стабильного исполнителя, если не проговорить с ним изменения.',
+                    effects: { result: 2, process: 1 }
+                }
+            ]
+        },
+        bird: {
+            heroId: 'bird',
+            title: 'Птица и «зажатые крылья»',
+            text: 'Птица приносит выручку и идеи. В ответ на её предложения вы вводите больше отчётности и согласований, чтобы «держать под контролем». Она продолжает работать, но заметно меньше инициирует новые проекты.',
+            options: [
+                {
+                    id: 'bird-1',
+                    text: 'Обсуждаете с ней цели и рамки: где ей нужна свобода, а где — прозрачность. Сокращаете лишние согласования, оставляя только ключевые точки контроля.',
+                    comment: 'Вы делаете ставку на результат и зрелость сотрудника, связывая свободу с ответственностью и цифрами.',
+                    effects: { result: 3 }
+                },
+                {
+                    id: 'bird-2',
+                    text: 'Считаете, что «так безопаснее»: сохраняете текущий уровень контроля и просите относиться к этому как к новой реальности в компании.',
+                    comment: 'Вы снижаете риск «ошибок», но теряете инициативу и драйв. Сильный человек превращается в аккуратного исполнителя.',
+                    effects: { process: 1, avoid: 2 }
+                },
+                {
+                    id: 'bird-3',
+                    text: 'Передаёте её идеи Лисе: она лучше «продаёт наверх» и умеет договариваться. Птица остаётся исполнителем, формально не возглавляя изменения.',
+                    comment: 'Вы усиливаете статусника и его влияние, но ослабляете прямую связь между инициативой и влиянием.',
+                    effects: { status: 2, result: 1 }
+                }
+            ]
+        },
+        fox: {
+            heroId: 'fox',
+            title: 'Лиса и борьба за влияние',
+            text: 'Лиса — яркая, амбициозная и заметная. Она тянется к руководству, активно комментирует решения коллег и часто подчёркивает свою включённость в «стратегические вопросы». Команда к ней относится настороженно.',
+            options: [
+                {
+                    id: 'fox-1',
+                    text: 'Привязываете её статус к понятным KPI команды: даёте ей зону ответственности, где результат прозрачен, и договариваетесь, что влияние растёт вместе с цифрами и вкладом.',
+                    comment: 'Вы переводите энергию Лисы в полезное русло, связывая амбиции с реальным результатом.',
+                    effects: { result: 2, status: 1 }
+                },
+                {
+                    id: 'fox-2',
+                    text: 'Игнорируете сигналы команды, позволяя Лисе продолжать управлять повесткой через кулуарные разговоры и личные отношения.',
+                    comment: 'Вы усиливаете статусные игры и конкуренцию за влияние, не подкрепляя это вкладом в бизнес.',
+                    effects: { status: 3, avoid: 1 }
+                },
+                {
+                    id: 'fox-3',
+                    text: 'Ограничиваете её влияние, убирая из ключевых обсуждений, но чётко не проговариваете причин. Лиса остаётся в компании, но чувствует себя обиженной.',
+                    comment: 'Формально вы снижаете риски, но оставляете много недоговорённости и почвы для скрытого саботажа.',
+                    effects: { avoid: 2, status: 1 }
+                }
+            ]
+        },
+        rat: {
+            heroId: 'rat',
+            title: 'Крыса и невидимая токсичность',
+            text: 'Крыса формально полезен: он знает старые процессы и «как тут всё устроено». При этом регулярно делится с коллегами своим недовольством руководством и решением компании, но на собраниях ведёт себя лояльно.',
+            options: [
+                {
+                    id: 'rat-1',
+                    text: 'Собираете факты, проводите личный разговор: называете конкретные примеры токсичного влияния, обозначаете рамки и последствия. Даёте выбор: менять поведение или честно расставаться.',
+                    comment: 'Вы берёте на себя взрослое управленческое решение, защищая команду и культуру.',
+                    effects: { result: 2, process: 1 }
+                },
+                {
+                    id: 'rat-2',
+                    text: 'Считаете, что «главное — результат», поэтому закрываете глаза на его комментарии, пока он справляется со своими задачами.',
+                    comment: 'Вы позволяете токсичности разъедать доверие в команде ради локальной пользы.',
+                    effects: { status: 1, avoid: 3 }
+                },
+                {
+                    id: 'rat-3',
+                    text: 'Пытаетесь «подружиться»: делитесь инсайдами, иногда соглашаетесь с его претензиями, надеясь таким образом снизить негатив.',
+                    comment: 'Вы усиливаете его ощущение важности и право сомневаться в руководстве вслух.',
+                    effects: { status: 2, avoid: 2 }
+                }
             ]
         }
     };
 
-    const panelDynamic = document.getElementById('panel-dynamic');
+    const playableHeroes = ['hamster', 'bird', 'fox', 'rat'];
+
+    // DOM элементы
     const heroChips = Array.from(document.querySelectorAll('.hero-chip'));
+    const floors = Array.from(document.querySelectorAll('.teremok-floor'));
+    const panelTitle = document.getElementById('panel-title');
+    const panelSubtitle = document.getElementById('panel-subtitle');
+    const panelProgress = document.getElementById('panel-progress');
 
-    function renderHero(heroId) {
-        const hero = heroes[heroId];
-        if (!hero) return;
+    const panelHeroTag = document.getElementById('panel-hero-tag');
+    const panelHeroName = document.getElementById('panel-hero-name');
+    const panelHeroType = document.getElementById('panel-hero-type');
 
-        heroChips.forEach(chip => {
-            chip.classList.toggle('active', chip.dataset.heroId === heroId);
-        });
+    const sceneContainer = document.getElementById('scene-container');
+    const sceneTitle = document.getElementById('scene-title');
+    const sceneText = document.getElementById('scene-text');
+    const sceneOptions = document.getElementById('scene-options');
+    const sceneComment = document.getElementById('scene-comment');
+    const sceneHint = document.getElementById('scene-hint');
+    const sceneFinishBtn = document.getElementById('scene-finish');
 
-        const typeLabelClass = hero.typeClass || '';
+    const summaryBox = document.getElementById('game-summary');
+    const summaryText = document.getElementById('game-summary-text');
+    const barResult = document.getElementById('bar-result');
+    const barProcess = document.getElementById('bar-process');
+    const barStatus = document.getElementById('bar-status');
+    const barAvoid = document.getElementById('bar-avoid');
+    const valResult = document.getElementById('value-result');
+    const valProcess = document.getElementById('value-process');
+    const valStatus = document.getElementById('value-status');
+    const valAvoid = document.getElementById('value-avoid');
 
-        panelDynamic.innerHTML = `
-            <div class="panel-type-tag">
-                <span>Типаж героя:</span>
-                <span class="panel-type-pill ${typeLabelClass}">${hero.typeLabel}</span>
-            </div>
-            <h3 class="panel-title">${hero.name}</h3>
-            <p class="panel-subtitle">${hero.short}</p>
+    // Состояние игры
+    let currentHeroId = null;
+    let selectedOption = null;
+    const completed = new Set();
+    const scores = {
+        result: 0,
+        process: 0,
+        status: 0,
+        avoid: 0
+    };
 
-            <div class="panel-section-title">Чем он полезен компании</div>
-            <ul class="panel-list">
-                ${hero.does.map(item => `<li>${item}</li>`).join('')}
-            </ul>
-
-            <div class="panel-section-title">Риски, если оставить всё как есть</div>
-            <ul class="panel-list">
-                ${hero.risks.map(item => `<li>${item}</li>`).join('')}
-            </ul>
-
-            <div class="panel-section-title">Как с ним лучше работать</div>
-            <ul class="panel-list">
-                ${hero.management.map(item => `<li>${item}</li>`).join('')}
-            </ul>
-
-            <div class="panel-highlight">
-                Это описание — часть логики «Теремка» и «Формулы успешной команды».
-                Дальше сюда можно добавить: уровень вовлечённости (зелёный/жёлтый/оранжевый/красный),
-                позицию в Матрице системности и ссылку на упражнения для руководителя.
-            </div>
-        `;
+    function updateProgress() {
+        panelProgress.textContent = 'Пройдено сценариев: ' + completed.size + ' из ' + playableHeroes.length;
     }
 
-    heroChips.forEach(chip => {
-        chip.addEventListener('click', () => {
+    function setActiveHeroChip(heroId) {
+        heroChips.forEach(chip => {
             const id = chip.dataset.heroId;
-            renderHero(id);
+            chip.classList.toggle('active', id === heroId);
+            chip.classList.toggle('completed', completed.has(id));
+        });
+    }
+
+    function setActiveFloorByHero(heroId) {
+        floors.forEach(floor => floor.classList.remove('teremok-floor-active'));
+        if (!heroId) return;
+        const chip = document.querySelector('.hero-chip[data-hero-id="' + heroId + '"]');
+        if (!chip) return;
+        const floor = chip.closest('.teremok-floor');
+        if (floor) {
+            floor.classList.add('teremok-floor-active');
+        }
+    }
+
+    function clearSceneSelection() {
+        selectedOption = null;
+        sceneComment.textContent = '';
+        sceneFinishBtn.disabled = true;
+        Array.from(sceneOptions.children).forEach(btn => {
+            btn.classList.remove('selected');
+        });
+    }
+
+    function openHero(heroId) {
+        currentHeroId = heroId;
+        setActiveHeroChip(heroId);
+        setActiveFloorByHero(heroId);
+        summaryBox.classList.add('hidden');
+
+        const hero = heroes[heroId];
+
+        if (!playableHeroes.includes(heroId)) {
+            // Для Лидера и Профи пока только подсказка
+            sceneContainer.classList.add('hidden');
+            panelHeroTag.classList.remove('hidden');
+            panelHeroName.textContent = hero ? hero.name : '';
+            panelHeroType.textContent = hero ? hero.typeLabel : '';
+            panelHeroType.className = 'panel-hero-pill ' + (hero ? hero.typeClass : '');
+            panelTitle.textContent = hero ? hero.name + ': герои без сценария (пока)' : 'Герой без сценария';
+            panelSubtitle.textContent = 'В этой версии игры сценарии есть только у Птицы, Хомяка, Лисы и Крысы. Лидер и Профи появляются как фон и будут раскрыты в следующих итерациях.';
+            return;
+        }
+
+        const scenario = scenarios[heroId];
+        if (!scenario) return;
+
+        const heroInfo = heroes[heroId];
+
+        panelHeroTag.classList.remove('hidden');
+        panelHeroName.textContent = heroInfo.name;
+        panelHeroType.textContent = heroInfo.typeLabel;
+        panelHeroType.className = 'panel-hero-pill ' + heroInfo.typeClass;
+
+        panelTitle.textContent = 'Сцена: ' + heroInfo.name;
+        panelSubtitle.textContent = 'Прочитайте ситуацию и выберите, как вы поступите как руководитель. Это не «правильно/неправильно», а про ваш управленческий стиль.';
+
+        sceneContainer.classList.remove('hidden');
+        sceneTitle.textContent = scenario.title;
+        sceneText.textContent = scenario.text;
+
+        sceneOptions.innerHTML = '';
+        scenario.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'scene-option-btn';
+            btn.textContent = opt.text;
+
+            btn.addEventListener('click', function () {
+                selectedOption = opt;
+                Array.from(sceneOptions.children).forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                sceneComment.textContent = opt.comment;
+                sceneFinishBtn.disabled = false;
+            });
+
+            sceneOptions.appendChild(btn);
+        });
+
+        if (completed.has(heroId)) {
+            sceneHint.textContent = 'Сценарий для этого героя уже пройден. Вы можете ещё раз посмотреть варианты, но итоговый профиль уже зафиксирован.';
+            sceneFinishBtn.disabled = true;
+        } else {
+            sceneHint.textContent = 'Выберите вариант выше, затем нажмите «Завершить сценарий».';
+            clearSceneSelection();
+        }
+    }
+
+    function showSummary() {
+        const r = scores.result;
+        const p = scores.process;
+        const s = scores.status;
+        const a = scores.avoid;
+
+        valResult.textContent = r.toString();
+        valProcess.textContent = p.toString();
+        valStatus.textContent = s.toString();
+        valAvoid.textContent = a.toString();
+
+        const max = Math.max(r, p, s, a, 1);
+        barResult.style.width = (r / max * 100).toFixed(0) + '%';
+        barProcess.style.width = (p / max * 100).toFixed(0) + '%';
+        barStatus.style.width = (s / max * 100).toFixed(0) + '%';
+        barAvoid.style.width = (a / max * 100).toFixed(0) + '%';
+
+        let dominant = 'result';
+        let dominantText = '';
+
+        if (p >= r && p >= s && p >= a) dominant = 'process';
+        if (s >= r && s >= p && s >= a) dominant = 'status';
+        if (a >= r && a >= p && a >= s) dominant = 'avoid';
+
+        switch (dominant) {
+            case 'result':
+                dominantText = 'В этой игре вы чаще принимали решения в пользу результата и прямых разворотов проблем. ';
+                dominantText += 'Такой стиль поддерживает Птиц и сильных профи, но важно не забывать про ресурс процессников и прозрачную работу со статусниками.';
+                break;
+            case 'process':
+                dominantText = 'Вы заметно опирались на стабильность и процессников. ';
+                dominantText += 'Это помогает держать рутину и качество, но при перегибе может тормозить инициативу и изменения.';
+                break;
+            case 'status':
+                dominantText = 'Во многих решениях вы усиливали статусные игры и мягкие компромиссы. ';
+                dominantText += 'Так можно временно сглаживать острые углы, но растут риски: сильные люди выгорают, а подсистемные набирают вес.';
+                break;
+            case 'avoid':
+                dominantText = 'Вы часто уходили от жёстких разворотов и прямого разговора с проблемой. ';
+                dominantText += 'Команда может считывать это как готовность терпеть перегрузку, токсичность и неэффективные роли.';
+                break;
+        }
+
+        summaryText.textContent = dominantText;
+        summaryBox.classList.remove('hidden');
+    }
+
+    // Обработчик завершения сценария
+    sceneFinishBtn.addEventListener('click', function () {
+        if (!currentHeroId || !selectedOption) return;
+        if (completed.has(currentHeroId)) return;
+
+        const eff = selectedOption.effects || {};
+        scores.result += eff.result || 0;
+        scores.process += eff.process || 0;
+        scores.status += eff.status || 0;
+        scores.avoid += eff.avoid || 0;
+
+        completed.add(currentHeroId);
+        setActiveHeroChip(currentHeroId);
+        updateProgress();
+
+        sceneHint.textContent = 'Сценарий сохранён. Выберите другого героя в Теремке слева.';
+        sceneFinishBtn.disabled = true;
+
+        if (completed.size === playableHeroes.length) {
+            showSummary();
+        }
+    });
+
+    // Клики по героям
+    heroChips.forEach(chip => {
+        chip.addEventListener('click', function () {
+            const id = chip.dataset.heroId;
+            openHero(id);
         });
     });
 
-    // По умолчанию можно показать кого-то одного
-    renderHero('bird');
+    // Стартовое состояние
+    updateProgress();
 })();
 </script>
 </body>
